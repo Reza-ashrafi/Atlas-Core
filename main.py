@@ -1,4 +1,7 @@
-import os
+print("BOT STARTED")
 
-print("BOT_TOKEN =", os.getenv("BOT_TOKEN"))
-print("CHAT_ID =", os.getenv("CHAT_ID"))
+from telegram_sender import send_report
+
+send_report()
+
+print("DONE")
