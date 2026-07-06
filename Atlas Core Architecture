@@ -1,0 +1,235 @@
+# Atlas Core Architecture
+
+Version: 1.0
+
+Status: ACTIVE
+
+---
+
+# Overview
+
+Atlas Core is a multi-layer decision support system for Iranian commodity funds.
+
+It does NOT generate random signals.
+
+It processes real market data and produces explainable investment decisions.
+
+---
+
+# System Flow
+
+Data flows strictly in one direction:
+
+```
+Data Providers
+      ↓
+Data Validation Layer
+      ↓
+Storage Layer (History / NAV)
+      ↓
+Indicator Engine
+      ↓
+Strategy Engine
+      ↓
+Score Engine
+      ↓
+Risk Engine
+      ↓
+Decision Engine
+      ↓
+Explanation Engine
+      ↓
+Telegram / Report Output
+```
+
+---
+
+# Core Modules
+
+## 1. Data Providers
+
+Responsible for fetching raw market data.
+
+Sources:
+- TSETMC (price, volume)
+- NAV feeds
+- Macro data (Dollar, Silver)
+
+Rules:
+- Must NOT analyze data
+- Must NOT calculate indicators
+- Only fetch and normalize data
+
+---
+
+## 2. Data Validation Layer
+
+Ensures data integrity before storage.
+
+Checks:
+- Missing candles
+- Duplicate dates
+- Invalid prices
+- Zero volume anomalies
+- NAV availability
+
+If validation fails:
+→ Data is rejected or marked invalid
+
+---
+
+## 3. Storage Layer
+
+Stores all historical data locally.
+
+Rules:
+- Append-only
+- No overwriting past data
+- CSV or database compatible
+- Must support multiple funds
+
+---
+
+## 4. Indicator Engine
+
+Calculates technical indicators:
+
+- EMA
+- RSI
+- MACD
+- ATR
+- Momentum
+- Volume averages
+
+Rules:
+- No market data fetching
+- Only receives clean historical data
+
+---
+
+## 5. Strategy Engine
+
+Runs multiple strategies in parallel:
+
+- Trend Following
+- Mean Reversion
+- Breakout Strategy
+- NAV-based Strategy
+- Multi-factor Strategy
+
+Output:
+- Strategy score per fund
+
+---
+
+## 6. Score Engine
+
+Combines all signals into a unified score:
+
+- Technical score
+- NAV score
+- Volume score
+- Macro score
+
+Output:
+- Final Score (0–100)
+
+---
+
+## 7. Risk Engine
+
+Evaluates risk conditions:
+
+- High premium risk
+- Volatility spikes
+- Low liquidity
+- Market instability
+
+Output:
+- Risk Level: LOW / MEDIUM / HIGH
+
+---
+
+## 8. Decision Engine
+
+Generates final decision:
+
+- BUY
+- SELL
+- WAIT
+
+Rules:
+- Must consider Score + Risk + Validation
+- Never act on incomplete data
+
+---
+
+## 9. Explanation Engine
+
+Every decision must include:
+
+- Why the decision was made
+- Which indicators contributed
+- Which risks were present
+
+No black-box decisions allowed.
+
+---
+
+## 10. Output Layer
+
+Outputs results to:
+
+- Telegram bot
+- Logs
+- JSON reports
+- Backtest system
+
+---
+
+# Backtesting Rules
+
+- No future data leakage
+- Strict time-based simulation
+- Must replicate real market conditions
+- NAV delay must be simulated
+
+---
+
+# Multi-Fund Design
+
+System supports unlimited funds:
+
+Example:
+- NQRABI
+- AYAR
+- NAHAL
+- SYNERGY
+
+Each fund is treated independently but evaluated together in Portfolio Engine.
+
+---
+
+# Key Design Principle
+
+> Separation of concerns is mandatory.
+
+Each module must be replaceable without affecting others.
+
+---
+
+# Future Extensions (Already Designed For)
+
+- Machine Learning Layer
+- Portfolio Optimization Engine
+- REST API Layer
+- Web Dashboard
+- Live Trading Simulation
+
+---
+
+# Critical Rule
+
+If a module violates architecture boundaries:
+
+→ It must be refactored before merge.
