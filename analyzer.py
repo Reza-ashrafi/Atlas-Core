@@ -20,21 +20,7 @@ def analyze():
         "bubble": bubble,
         "score": score,
         "decision": decision
-    }        }
-
-    usd = 60000
-
-    intrinsic = silver * usd
-    market = intrinsic * 1.03
-
-    bubble = ((market - intrinsic) / intrinsic) * 100 if intrinsic else 0
-    score = max(0, 100 - abs(bubble) * 10)
-
-    decision = "📈 مناسب بررسی" if bubble < 5 else "⚠️ حباب بالا"
-
-    return {
-        "silver": silver,
-        "usd": usd,
+    }        "usd": usd,
         "intrinsic": intrinsic,
         "market": market,
         "bubble": bubble,
