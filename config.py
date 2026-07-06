@@ -1,47 +1,116 @@
+# Atlas Core
+# config.py
+# Version: 1.0.0
+# Purpose: Central configuration for all system modules
 
-import os
+from dataclasses import dataclass
 
-# ==========================
-# Telegram
-# ==========================
+# -----------------------------
+# GENERAL SETTINGS
+# -----------------------------
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
+MODE = "BACKTEST"   # BACKTEST | LIVE
+BASE_CURRENCY = "IRT"
 
-# ==========================
-# APIs
-# ==========================
+DEBUG = True
 
-SILVER_API = "https://api.metals.live/v1/spot/silver"
+# -----------------------------
+# DATA SETTINGS
+# -----------------------------
 
-# ==========================
-# تحلیل
-# ==========================
+DATA_PATH = "data/"
+HISTORY_PATH = "data/history/"
+NAV_PATH = "data/nav/"
+SNAPSHOT_PATH = "data/snapshots/"
+REPORT_PATH = "data/reports/"
+CACHE_PATH = "data/cache/"
 
-# ضریب ارزش منصفانه بازار ایران
-MARKET_PREMIUM = 3.2
+# -----------------------------
+# FUNDS SETTINGS
+# -----------------------------
 
-# محدوده‌های تصمیم
-BUY_LIMIT = -10
-NORMAL_LIMIT = 15
+FUNDS = {
+    "NQRABI": {
+        "name": "نقرابی",
+        "symbol": "NQRABI",
+        "active": True
+    },
+    "AYAR": {
+        "name": "عیار",
+        "symbol": "AYAR",
+        "active": True
+    },
+    "NAHAL": {
+        "name": "نهال",
+        "symbol": "NAHAL",
+        "active": True
+    },
+    "SYNERGY": {
+        "name": "سینرژی",
+        "symbol": "SYNERGY",
+        "active": True
+    }
+}
 
-# ==========================
-# زمان‌بندی
-# ==========================
-REQUEST_TIMEOUT = 15
+# -----------------------------
+# INDICATOR SETTINGS
+# -----------------------------
 
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0 Safari/537.36"
+EMA_FAST = 20
+EMA_SLOW = 50
 
-MAX_RETRY = 3
+RSI_PERIOD = 14
 
-REPORT_HOUR = 12
-REPORT_MINUTE = 0
+MACD_FAST = 12
+MACD_SLOW = 26
+MACD_SIGNAL = 9
 
-# ==========================
-# منابع قیمت
-# ==========================
+ATR_PERIOD = 14
 
-PRICE_SOURCES = [
-    "https://www.tgju.org/profile/silver_999",
-    "https://tajnoghreh.com/silver-price/"
-]
+VOLUME_LOOKBACK = 20
+
+# -----------------------------
+# SCORE WEIGHTS
+# -----------------------------
+
+WEIGHTS = {
+    "trend": 0.20,
+    "macd": 0.10,
+    "rsi": 0.10,
+    "momentum": 0.10,
+    "volume": 0.15,
+    "nav": 0.20,
+    "macro": 0.15
+}
+
+# -----------------------------
+# RISK SETTINGS
+# -----------------------------
+
+MAX_ACCEPTABLE_PREMIUM = 0.05   # 5%
+HIGH_RISK_THRESHOLD = 0.70
+
+# -----------------------------
+# SIGNAL SETTINGS
+# -----------------------------
+
+BUY_THRESHOLD = 75
+SELL_THRESHOLD = 35
+
+MIN_CONFIDENCE = 0.70
+
+# -----------------------------
+# BACKTEST SETTINGS
+# -----------------------------
+
+INITIAL_CAPITAL = 10000000  # 10M IRT
+FEE = 0.0015  # 0.15%
+
+SLIPPAGE = 0.001
+
+# -----------------------------
+# LOGGING SETTINGS
+# -----------------------------
+
+LOG_LEVEL = "INFO"
+SAVE_LOGS = True
