@@ -1,40 +1,26 @@
-import requests
-
-def get_silver_price():
-    try:
-        url = "https://www.tgju.org/profile/silver_999"
-        r = requests.get(url, timeout=10)
-        r.raise_for_status()
-
-        text = r.text
-
-        # خیلی ساده و مقاوم (بدون BeautifulSoup حساس)
-        import re
-        match = re.search(r'data-col="info.last".*?>([\d,]+)</span>', text)
-
-        if not match:
-            return None
-
-        return float(match.group(1).replace(",", ""))
-
-    except Exception as e:
-        print("SILVER ERROR:", e)
-        return None
-
-
 def analyze():
-    silver = get_silver_price()
+    # دیتا موقت برای اینکه ربات نخوابه
+    silver = 28.5
+    usd = 60000
 
-    if not silver:
-        return {
-            "silver": 0,
-            "usd": 0,
-            "intrinsic": 0,
-            "market": 0,
-            "bubble": 0,
-            "score": 0,
-            "decision": "❌ خطا در دریافت قیمت نقره (سایت در دسترس نیست)"
-        }
+    intrinsic = silver * usd
+    market = intrinsic * 1.02
+
+    bubble = ((market - intrinsic) / intrinsic) * 100
+
+    score = max(0, 100 - abs(bubble) * 10)
+
+    decision = "📈 فعلاً پایدار - تستی"
+
+    return {
+        "silver": silver,
+        "usd": usd,
+        "intrinsic": intrinsic,
+        "market": market,
+        "bubble": bubble,
+        "score": score,
+        "decision": decision
+    }        }
 
     usd = 60000
 
